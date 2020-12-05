@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.mapper">
+
+<insert id="userinfoadd" parameterType="userVO">
+INSERT INTO tbluser (userid, username, userphone, userbirthdate, usergender, usermail, usercurriculum, surveyid, centername) 
+VALUE(NULL, #{username}, #{userphone}, #{userbirthdate}, #{usergender}, #{usermail}, #{usercurriculum}, #{surveyid}, #{centername});
+</insert>
+
+<select id="usericcheck" resultType="userVO">
+select * from tbluser where username = #{username} and userphone =#{userphone} and userbirthdate = #{userbirthdate} and usergender = #{usergender} and surveyid =#{surveyid}
+</select>
+
+<select id="userid" resultType="String">
+select userid from tbluser where username = #{username} and userphone =#{userphone} and userbirthdate = #{userbirthdate} and usergender = #{usergender} and usermail =#{usermail} and surveyid =#{surveyid}
+</select>
+
+
+<select id="questioncheck" resultType="int">
+select count(surveyid)  from tblquestion where surveyid = #{surveyid} and questiontype = #{questiontype}
+</select>
+
+<select id="findqcount" resultType="int">
+select count(questionid)  from tblquestion where questionid = #{questionid}
+</select>
+
+
+<insert id="questionadd" parameterType="Hashmap">
+INSERT INTO tblquestion (questionid, questiontype, question, questionprpn, questionnum, surveyid) 
+VALUE(NULL, #{questiontype}, #{question}, #{questionprpn}, #{questionnum}, #{surveyid});
+</insert>
+
+<insert id="questionaddNP" parameterType="Hashmap">
+INSERT INTO tblquestion (questionid, questiontype, question, questionnum, surveyid) 
+VALUE(NULL, #{questiontype}, #{question}, #{questionnum}, #{surveyid});
+</insert>
+
+
+<insert id="answeradd" parameterType="Hashmap">
+INSERT INTO tblanswer VALUE(NULL, #{answer}, #{questionid}, #{userid});
+</insert>
+
+
+<select id="findqid" resultType="String">
+select questionid  from tblquestion where questiontype=#{answertype} and questionprpn = #{answerprpn} and questionnum= #{answernum} and surveyid =#{surveyid}
+</select>
+
+<select id="findqidNP" resultType="String">
+select questionid  from tblquestion where questiontype=#{answertype} and questionnum= #{answernum} and surveyid =#{surveyid}
+</select>
+
+
+<select id="answerresult" resultType="String">
+select answer from tblanswer where questionid=#{questionid} and userid=#{userid}
+</select>
+
+<update id="lstyle" parameterType="Hashmap">
+update tbluser set ACT=#{act}, REF=#{ref}, SEN=#{sen}, INTU=#{intu}, VIS=#{vis}, VRB=#{vrb}, SEQ=#{seq}, GLO=#{glo}, TYPEAR=#{typear}, TYPESI=#{typesi}, TYPEVV=#{typevv}, TYPESG=#{typesg}, 
+ARCAL=#{arcal}, SICAL=#{sical}, VVCAL=#{vvcal}, SGCAL=#{sgcal} 
+where userid=#{userid};
+</update>
+
+<select id="dbsave">
+SELECT username, userphone, userbirthdate, usergender, usermail, usercurriculum, surveyid, 
+ACT, REF, SEN, INTU, VIS, VRB, SEQ, GLO, TYPEAR, TYPESI, TYPEVV, TYPESG, ARCAL, SICAL, VVCAL, SGCAL, 
+Style1A, Style1B, Style2A, Style2B, Style3A, Style3B, Style4A, Style4B, Style5A, Style5B, 
+Style6A, Style6B, Style7A, Style7B, Style8A, Style8B, Style9A, Style9B, Style10A, Style10B, 
+Style11A, Style11B, Style12A, Style12B, Style13A, Style13B, Style14A, Style14B, Style15A, Style15B, Style16A, Style16B, 
+Subject1, Subject2, Subject3, Subject4, Subject5, Subject6, Subject7, Subject8, 
+Subject9, Subject10, Subject11, Subject12, Subject13, Subject14, Subject15, Subject16, 
+Shabits1, Shabits2, Shabits3, Shabits4, Shabits5, Shabits6, Shabits7, Shabits8, Shabits9, 
+Shabits10, Shabits11, Shabits12, Shabits13, Shabits14, Shabits15, Shabits16, Shabits17, Shabits18 
+into outfile 'C:\USER2.csv' fields terminated BY ',' FROM tbluser as user
+JOIN (SELECT userid,
+sum(case when questionid='1' then answer end) as 'Style1A',
+sum(case when questionid='2' then answer end) as 'Style1B',
+sum(case when questionid='3' then answer end) as 'Style2A',
+sum(case when questionid='4' then answer end) as 'Style2B', 
+sum(case when questionid='5' then answer end) as 'Style3A',
+sum(case when questionid='6' then answer end) as 'Style3B', 
+sum(case when questionid='7' then answer end) as 'Style4A',
+sum(case when questionid='8' then answer end) as 'Style4B', 
+sum(case when questionid='9' then answer end) as 'Style5A',
+sum(case when questionid='10' then answer end) as 'Style5B', 
+sum(case when questionid='11' then answer end) as 'Style6A',
+sum(case when questionid='12' then answer end) as 'Style6B', 
+sum(case when questionid='13' then answer end) as 'Style7A',
+sum(case when questionid='14' then answer end) as 'Style7B', 
+sum(case when questionid='15' then answer end) as 'Style8A',
+sum(case when questionid='16' then answer end) as 'Style8B', 
+sum(case when questionid='17' then answer end) as 'Style9A',
+sum(case when questionid='18' then answer end) as 'Style9B', 
+sum(case when questionid='19' then answer end) as 'Style10A',
+sum(case when questionid='20' then answer end) as 'Style10B', 
+sum(case when questionid='21' then answer end) as 'Style11A',
+sum(case when questionid='22' then answer end) as 'Style11B', 
+sum(case when questionid='23' then answer end) as 'Style12A',
+sum(case when questionid='24' then answer end) as 'Style12B', 
+sum(case when questionid='25' then answer end) as 'Style13A',
+sum(case when questionid='26' then answer end) as 'Style13B', 
+sum(case when questionid='27' then answer end) as 'Style14A',
+sum(case when questionid='28' then answer end) as 'Style14B', 
+sum(case when questionid='29' then answer end) as 'Style15A',
+sum(case when questionid='30' then answer end) as 'Style15B', 
+sum(case when questionid='31' then answer end) as 'Style16A',
+sum(case when questionid='32' then answer end) as 'Style16B', 
+sum(case when questionid='33' then answer end) as 'Subject1',
+sum(case when questionid='34' then answer end) as 'Subject2', 
+sum(case when questionid='35' then answer end) as 'Subject3', 
+sum(case when questionid='36' then answer end) as 'Subject4', 
+sum(case when questionid='37' then answer end) as 'Subject5', 
+sum(case when questionid='38' then answer end) as 'Subject6', 
+sum(case when questionid='39' then answer end) as 'Subject7', 
+sum(case when questionid='40' then answer end) as 'Subject8', 
+sum(case when questionid='41' then answer end) as 'Subject9', 
+sum(case when questionid='42' then answer end) as 'Subject10', 
+sum(case when questionid='43' then answer end) as 'Subject11', 
+sum(case when questionid='44' then answer end) as 'Subject12', 
+sum(case when questionid='45' then answer end) as 'Subject13', 
+sum(case when questionid='46' then answer end) as 'Subject14', 
+sum(case when questionid='47' then answer end) as 'Subject15', 
+sum(case when questionid='48' then answer end) as 'Subject16',  
+sum(case when questionid='49' then answer end) as 'Shabits1',
+sum(case when questionid='50' then answer end) as 'Shabits2', 
+sum(case when questionid='51' then answer end) as 'Shabits3', 
+sum(case when questionid='52' then answer end) as 'Shabits4', 
+sum(case when questionid='53' then answer end) as 'Shabits5', 
+sum(case when questionid='54' then answer end) as 'Shabits6', 
+sum(case when questionid='55' then answer end) as 'Shabits7', 
+sum(case when questionid='56' then answer end) as 'Shabits8', 
+sum(case when questionid='57' then answer end) as 'Shabits9', 
+sum(case when questionid='58' then answer end) as 'Shabits10', 
+sum(case when questionid='59' then answer end) as 'Shabits11', 
+sum(case when questionid='60' then answer end) as 'Shabits12', 
+sum(case when questionid='61' then answer end) as 'Shabits13', 
+sum(case when questionid='62' then answer end) as 'Shabits14', 
+sum(case when questionid='63' then answer end) as 'Shabits15', 
+sum(case when questionid='64' then answer end) as 'Shabits16', 
+sum(case when questionid='65' then answer end) as 'Shabits17', 
+sum(case when questionid='66' then answer end) as 'Shabits18' 
+FROM tblanswer GROUP BY userid) as an
+ON user.userid = an.userid
+
+</select>
+<select id="findsid" resultType="int">
+select count(surveyid)  from tblsurvey where surveyname=#{surveyname}
+</select>
+
+<select id="findsurveyid" resultType="int">
+select surveyid  from tblsurvey where surveyname=#{surveyname}
+</select>
+
+<insert id="addsurveyid" parameterType="String">
+INSERT INTO tblsurvey VALUE(NULL, #{surveyname});
+</insert>
+
+<insert id="userrecord" parameterType="subjectVO">
+INSERT INTO tblrecord (recordid, userid, surveyid, kor1, korp, eng1, engp, matslc, mat1, matp,  selsubo, selsubo1, selsubop, selsubt, selsubt1, selsubtp) 
+VALUE(NULL, #{userid}, #{surveyid}, #{kor1}, #{korp}, #{eng1}, #{engp}, #{matslc}, #{mat1}, #{matp},  #{selsubo}, #{selsubo1}, #{selsubop}, #{selsubt}, #{selsubt1}, #{selsubtp});
+</insert>
+
+<insert id="userpriority" parameterType="subjectVO">
+INSERT INTO tblpriority (priorityid, userid, surveyid, korin, korre, korpr, korpt, engin, engre, engpr, engpt, matin, matre, matpr, matpt, selsuin, selsure, selsupr, selsupt, selsu1in, selsu1re, selsu1pr, selsu1pt) 
+VALUE(NULL, #{userid}, #{surveyid}, #{korin,}, #{korre,}, #{korpr}, #{korpt}, #{engin}, #{engre}, #{engpr}, #{engpt}, #{matin}, #{matre}, #{matpr}, #{matpt}, #{selsuin}, #{selsure}, #{selsupr}, #{selsupt}, #{selsu1in}, #{selsu1re}, #{selsu1pr}, #{selsu1pt});
+</insert>
+
+<select id="checkBlankType" parameterType="String" resultType="int">
+SELECT COUNT(*) FROM tbluser WHERE userid = #{userid} AND 'Blank' IN (TYPEAR, TYPESI, TYPEVV, TYPESG)
+</select>
+<select id="answerCheck" parameterType="Hashmap" resultType="int">
+SELECT count(*) from tblanswer WHERE questionid = ${questionid} AND userid = ${userid}
+</select>
+<update id="answerUpdate" parameterType="Hashmap">
+update tblanswer set answer = ${answer} WHERE questionid = ${questionid} AND userid = ${userid}
+</update>
+</mapper>
